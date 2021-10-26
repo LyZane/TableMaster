@@ -35,7 +35,7 @@ public class MageTableTool extends AbstractTool {
     }
 
     @Override
-    protected void setParamList(List<ToolParam> list) throws IOException {
+    protected void setParamList(List<ToolParam> list) throws Exception {
         ApplicationContext.WORK_DIR = list.get(0).value;
 
         List<AbstractTable> tableList = Files
@@ -71,5 +71,6 @@ public class MageTableTool extends AbstractTool {
     @Override
     protected void run() throws Exception {
         action.mage();
+        System.out.println("合并结束");
     }
 }

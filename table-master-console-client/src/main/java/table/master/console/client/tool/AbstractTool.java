@@ -2,7 +2,6 @@ package table.master.console.client.tool;
 
 import table.master.console.client.ConsoleInput;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -13,9 +12,9 @@ public abstract class AbstractTool {
 
     protected abstract List<ToolParam> getParamList();
 
-    protected abstract void setParamList(List<ToolParam> list) throws IOException;
+    protected abstract void setParamList(List<ToolParam> list) throws Exception;
 
-    protected void inputParams() throws IOException {
+    protected void inputParams() throws Exception {
         List<ToolParam> paramList = getParamList();
         for (ToolParam param : paramList) {
             System.out.println(param.tips);

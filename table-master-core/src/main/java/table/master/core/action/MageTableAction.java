@@ -18,10 +18,13 @@ public class MageTableAction {
     private List<AbstractTable> tableList;
     private File outputFile;
 
-    public MageTableAction(TableType tableType, List<AbstractTable> tableList, File outputFile) {
+    public MageTableAction(TableType tableType, List<AbstractTable> tableList, File outputFile) throws Exception {
         this.tableType = tableType;
         this.tableList = tableList;
         this.outputFile = outputFile;
+        if (outputFile.exists()) {
+            throw new Exception("合成后的文件已存在，请删除后重试：" + outputFile.getAbsolutePath());
+        }
     }
 
     private void beforeMage() throws ActionException {
@@ -47,11 +50,15 @@ public class MageTableAction {
     public AbstractTable mage() throws Exception {
         beforeMage();
         AbstractTable table = createTable();
-
-        for (AbstractTable subTable : tableList) {
-            subTable.getReader().readAll(x -> {
-                table.getWriter().writeRow(x);
-            });
+        try {
+            for (AbstractTable subTable : tableList) {
+                subTable.getReader().readAll(x -> {
+                    table.getWriter().writeRow(x);
+                });
+                System.out.println("已合并：" + subTable.getFileName());
+            }
+        } finally {
+            table.close();
         }
 
         return table;

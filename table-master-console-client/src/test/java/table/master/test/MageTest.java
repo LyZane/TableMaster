@@ -46,6 +46,8 @@ public class MageTest {
         if (outputFile.exists()) {
             outputFile.delete();
         }
-        new MageTableAction(TableType.Excel, tableList, outputFile).mage();
+        MageTableAction action = new MageTableAction(TableType.Excel, tableList, outputFile);
+        action.mage();
+
     }
 }

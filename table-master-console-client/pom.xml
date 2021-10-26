@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>table-master-console-client</artifactId>
+    <version>1.0.0</version>
+
     <dependencies>
         <dependency>
             <groupId>www.lyzane.com</groupId>
@@ -18,10 +20,5 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
 
 </project>

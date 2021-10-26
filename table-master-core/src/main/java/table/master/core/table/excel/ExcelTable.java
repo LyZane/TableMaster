@@ -17,16 +17,20 @@ public class ExcelTable extends AbstractTable {
     private ExcelTableReader reader;
     private ExcelTableWriter writer;
 
+    /**
+     * read only
+     */
     public ExcelTable(File file) throws IOException {
         super(file);
         if (!file.exists()) {
             throw new RuntimeException("文件尚未创建时，不能使用此方法构造。");
         }
-
         reader = new ExcelTableReader(file);
-        writer = new ExcelTableWriter(reader.doGetHeader(), file);
     }
 
+    /**
+     * write only
+     */
     public ExcelTable(List<String> header, File file) throws Exception {
         super(file);
         if (file.exists()) {
@@ -34,7 +38,6 @@ public class ExcelTable extends AbstractTable {
         }
 
         writer = new ExcelTableWriter(header, file);
-        reader = new ExcelTableReader(file);
     }
 
     @Override

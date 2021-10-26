@@ -2,6 +2,7 @@ package table.master.core.table.excel;
 
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import org.apache.poi.ss.usermodel.Sheet;
 import table.master.core.table.base.AbstractTableWriter;
 
 import java.io.File;
@@ -24,12 +25,22 @@ public class ExcelTableWriter extends AbstractTableWriter {
     }
 
     private void initExcel() {
-        writer.write(super.header);
+        // 初始化 sheet
+        if (writer.getWorkbook().getNumberOfSheets() <= 0) {
+            writer.getWorkbook().createSheet("TableMaster" + writer.getWorkbook().getNumberOfSheets());
+        }
+
+        // 初始化列头行
+        Sheet sheet = writer.getWorkbook().getSheetAt(0);
+        if (sheet.getPhysicalNumberOfRows() == 0) {
+            writer.writeRow(super.header);
+        }
+
     }
 
     @Override
     protected void doWriteRow(LinkedHashMap<String, Object> row) {
-        writer.write(row.values());
+        writer.writeRow(row.values());
     }
 
     @Override
