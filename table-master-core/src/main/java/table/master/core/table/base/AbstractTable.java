@@ -2,7 +2,6 @@ package table.master.core.table.base;
 
 import java.io.Closeable;
 import java.io.File;
-import java.util.List;
 
 /**
  * @author zane
@@ -23,8 +22,6 @@ public abstract class AbstractTable implements Closeable {
     public String getFileName() {
         return file.getName();
     }
-
-    public abstract List<String> getHeader();
 
     public abstract AbstractTableWriter getWriter();
 

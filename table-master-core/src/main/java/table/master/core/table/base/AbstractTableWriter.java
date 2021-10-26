@@ -11,11 +11,11 @@ import java.util.List;
 public abstract class AbstractTableWriter implements Closeable {
     protected List<String> header;
 
-    protected abstract void doWriteRow(LinkedHashMap<String, Object> row);
-
     protected AbstractTableWriter(List<String> header) {
         this.header = header;
     }
+
+    protected abstract void doWriteRow(LinkedHashMap<String, Object> row);
 
     public void writeRow(LinkedHashMap<String, Object> row) {
         doWriteRow(row);

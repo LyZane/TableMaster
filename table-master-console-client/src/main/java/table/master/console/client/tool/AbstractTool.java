@@ -1,8 +1,8 @@
 package table.master.console.client.tool;
 
-import java.io.BufferedReader;
+import table.master.console.client.ConsoleInput;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -11,24 +11,25 @@ import java.util.List;
  */
 public abstract class AbstractTool {
 
+    protected abstract List<ToolParam> getParamList();
 
-    public abstract String name();
+    protected abstract void setParamList(List<ToolParam> list) throws IOException;
 
-    public abstract List<ToolParam> getParamList();
-
-    public abstract void setParamList(List<ToolParam> list);
-
-    public void inputParams() throws IOException {
+    protected void inputParams() throws IOException {
         List<ToolParam> paramList = getParamList();
         for (ToolParam param : paramList) {
             System.out.println(param.tips);
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            param.value = br.readLine();
+            param.value = ConsoleInput.getLine();
             System.out.println(param.value);
         }
 
         setParamList(paramList);
     }
 
-    public abstract void run();
+    protected abstract void run() throws Exception;
+
+    public void start() throws Exception {
+        inputParams();
+        run();
+    }
 }

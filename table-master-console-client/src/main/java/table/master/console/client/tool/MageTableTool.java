@@ -1,32 +1,75 @@
 package table.master.console.client.tool;
 
+import table.master.common.StringUtil;
+import table.master.core.ApplicationContext;
 import table.master.core.action.MageTableAction;
 import table.master.core.enums.TableType;
 import table.master.core.table.base.AbstractTable;
+import table.master.core.table.excel.ExcelTable;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author zane
  * @date 2021/10/25
  */
 public class MageTableTool extends AbstractTool {
+    private MageTableAction action;
 
     @Override
-    public void inputParams() throws IOException {
-        new ToolParam("请指定文件所在的目录（把文件夹拖进来会自动填充路径）：");
-        System.out.println();
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  //java.io.InputStreamReader继承了Reader类
-        String line = br.readLine();
-        System.out.println(line);
-        TableType tableType, List<AbstractTable > tableList, File outputFile
+    protected List<ToolParam> getParamList() {
+        return Arrays.asList(
+                new ToolParam("请指定文件所在的目录（把文件夹拖进来会自动填充路径）："),
+                new ToolParam(
+                        "请指定合并后的文件类型：" + System.lineSeparator()
+                                + "1. Excel" + System.lineSeparator()
+                                + "2. Csv"
+                )
+        );
     }
 
     @Override
-    public void run() {
-        new MageTableAction()
+    protected void setParamList(List<ToolParam> list) throws IOException {
+        ApplicationContext.WORK_DIR = list.get(0).value;
+
+        List<AbstractTable> tableList = Files
+                .list(ApplicationContext.getWorkDirPath())
+                .map(x -> {
+                    String suffix = StringUtil.substringAfterLast(x.toString(), ".").toLowerCase();
+                    switch (suffix) {
+                        case "xls":
+                        case "xlsx":
+                            try {
+                                return new ExcelTable(x.toFile());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        default:
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        TableType tableType = TableType.Excel;
+
+        File outputFile = new File(ApplicationContext.getAbsolutePath("mage.xlsx"));
+        if (outputFile.exists()) {
+            System.out.println("该文件已存在，将会被覆盖：" + outputFile.getAbsolutePath());
+            outputFile.delete();
+        }
+        action = new MageTableAction(tableType, tableList, outputFile);
+    }
+
+
+    @Override
+    protected void run() throws Exception {
+        action.mage();
     }
 }

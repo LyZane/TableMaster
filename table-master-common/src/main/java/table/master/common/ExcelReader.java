@@ -70,6 +70,10 @@ public class ExcelReader implements Closeable {
      * Gets the data of the specified row of the specified sheet
      */
     public List<Object> getRowData(int sheetIndex, int rowIndex) {
+        if (workbook.getNumberOfSheets() == 0) {
+            return null;
+        }
+
         Row row = workbook.getSheetAt(sheetIndex).getRow(rowIndex);
 
         if (row == null) {
@@ -94,6 +98,11 @@ public class ExcelReader implements Closeable {
      */
     public List<Object> getRowDataWithoutLastEmptyCell(int sheetIndex, int rowIndex) {
         List<Object> list = getRowData(sheetIndex, rowIndex);
+
+        if (list == null) {
+            return null;
+        }
+
         while (true) {
 
             int index = list.size() - 1;
@@ -113,7 +122,13 @@ public class ExcelReader implements Closeable {
      * Get column header
      */
     public List<String> getColumnNames(int sheetIndex) {
-        return getRowDataWithoutLastEmptyCell(sheetIndex, 0)
+        List<Object> list = getRowDataWithoutLastEmptyCell(sheetIndex, 0);
+
+        if (list == null) {
+            return null;
+        }
+
+        return list
                 .stream()
                 .map(String::valueOf)
                 .collect(Collectors.toList());

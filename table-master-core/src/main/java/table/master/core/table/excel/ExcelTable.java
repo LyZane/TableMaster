@@ -1,7 +1,5 @@
 package table.master.core.table.excel;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import table.master.common.CloseableUtil;
 import table.master.core.table.base.AbstractTable;
 import table.master.core.table.base.AbstractTableReader;
@@ -19,11 +17,14 @@ public class ExcelTable extends AbstractTable {
     private ExcelTableReader reader;
     private ExcelTableWriter writer;
 
-    public ExcelTable(File file) throws Exception {
+    public ExcelTable(File file) throws IOException {
         super(file);
         if (!file.exists()) {
-            throw new Exception("文件尚未创建时，不能使用此方法构造。");
+            throw new RuntimeException("文件尚未创建时，不能使用此方法构造。");
         }
+
+        reader = new ExcelTableReader(file);
+        writer = new ExcelTableWriter(reader.doGetHeader(), file);
     }
 
     public ExcelTable(List<String> header, File file) throws Exception {
@@ -32,15 +33,8 @@ public class ExcelTable extends AbstractTable {
             throw new Exception("文件已创建时，不能使用此方法构造。");
         }
 
-        // 创建文件
-        Workbook workbook = WorkbookFactory.create(file);
-        writer = new ExcelTableWriter(header, workbook);
-        reader = new ExcelTableReader(workbook);
-    }
-
-    @Override
-    public List<String> getHeader() {
-        return null;
+        writer = new ExcelTableWriter(header, file);
+        reader = new ExcelTableReader(file);
     }
 
     @Override

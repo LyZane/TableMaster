@@ -14,7 +14,6 @@ public abstract class AbstractTableReader implements Closeable {
     protected List<String> header;
     protected int readDataRows = 0;
 
-
     public abstract List<String> doGetHeader();
 
     public abstract long getTotalDataRowCount();
@@ -22,10 +21,18 @@ public abstract class AbstractTableReader implements Closeable {
     protected abstract LinkedHashMap<String, Object> doReadNextRow();
 
     public List<String> getHeader() {
-        return doGetHeader();
+        if (header != null) {
+            return header;
+        }
+        header = doGetHeader();
+        return header;
     }
 
     public LinkedHashMap<String, Object> readNextRow() {
+        if (header == null) {
+            getHeader();
+        }
+
         try {
             return doReadNextRow();
         } finally {

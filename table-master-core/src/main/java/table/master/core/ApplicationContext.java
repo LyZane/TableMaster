@@ -1,5 +1,6 @@
 package table.master.core;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -12,6 +13,10 @@ public class ApplicationContext {
      */
     public static String WORK_DIR;
 
+    public static Path getWorkDirPath() {
+        return Paths.get(WORK_DIR);
+    }
+
     /**
      * 基于 WORK_DIR 生成绝对路径
      */
@@ -19,21 +24,4 @@ public class ApplicationContext {
         return Paths.get(WORK_DIR, path).toAbsolutePath().toString();
     }
 
-    public static void printBlock(String title, String context) {
-        int totalLength = 40;
-        int maskLength = title.length() > totalLength ? 4 : totalLength - title.length();
-        for (int i = 0; i < (maskLength + 6) / 2; i++) {
-            System.out.print("*");
-        }
-        System.out.print(" ");
-        System.out.print(title);
-        System.out.print(" ");
-        for (int i = 0; i < (maskLength + 6) / 2; i++) {
-            System.out.print("*");
-        }
-        System.out.println();
-
-        System.out.println(context);
-        System.out.println();
-    }
 }

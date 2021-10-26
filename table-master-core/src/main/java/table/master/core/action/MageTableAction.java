@@ -24,11 +24,11 @@ public class MageTableAction {
         this.outputFile = outputFile;
     }
 
-    public void beforeMage() throws ActionException {
+    private void beforeMage() throws ActionException {
         // 检查列头是否相同
         long distinctCount = tableList
                 .stream()
-                .map(x -> StringUtil.join(x.getHeader()))
+                .map(x -> StringUtil.join(x.getReader().getHeader()))
                 .distinct()
                 .count();
 
@@ -36,8 +36,8 @@ public class MageTableAction {
             String message = "tables header 不一致" + System.lineSeparator();
             for (AbstractTable table : tableList) {
                 message += "【" + table.getFileName() + "】";
-                message += "(" + table.getHeader().size() + "列)";
-                message += StringUtil.join(table.getHeader(), ",");
+                message += "(" + table.getReader().getHeader().size() + "列)";
+                message += StringUtil.join(table.getReader().getHeader(), ",");
                 message += System.lineSeparator();
             }
             ActionException.of("MageTableAction Error", message);
@@ -58,7 +58,7 @@ public class MageTableAction {
     }
 
     private AbstractTable createTable() throws Exception {
-        List<String> header = tableList.get(0).getHeader();
+        List<String> header = tableList.get(0).getReader().getHeader();
         switch (tableType) {
             case Excel:
                 return new ExcelTable(header, outputFile);

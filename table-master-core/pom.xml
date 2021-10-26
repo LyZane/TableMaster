@@ -17,6 +17,11 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-poi</artifactId>
+            <version>5.7.15</version>
+        </dependency>
     </dependencies>
 
     <properties>
