@@ -46,6 +46,7 @@ public class MageTableTool extends AbstractTool {
                         case "xls":
                         case "xlsx":
                             try {
+                                System.out.println("发现表格：" + x);
                                 return new ExcelTable(x.toFile());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -70,6 +71,7 @@ public class MageTableTool extends AbstractTool {
 
     @Override
     protected void run() throws Exception {
+        System.out.println("开始合并...");
         action.mage();
         System.out.println("合并结束");
     }
