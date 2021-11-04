@@ -2,11 +2,14 @@ package table.master.core.table.excel;
 
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.RowUtil;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import table.master.core.table.base.AbstractTableWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -41,6 +44,30 @@ public class ExcelTableWriter extends AbstractTableWriter {
     @Override
     protected void doWriteRow(LinkedHashMap<String, Object> row) {
         writer.writeRow(row.values());
+    }
+
+
+    public void writeRowToSheet(LinkedHashMap<String, Object> row, String sheetName) {
+
+        if (writer.getWorkbook().getSheet(sheetName) == null) {
+            addSheet(sheetName, row.keySet());
+        }
+        Sheet sheet = writer.getWorkbook().getSheet(sheetName);
+        Row sheetRow = sheet.createRow(sheet.getPhysicalNumberOfRows());
+        RowUtil.writeRow(sheetRow, row.values(), writer.getStyleSet(), false);
+    }
+
+    public void addSheet(String sheetName, Collection<String> header) {
+        // 创建 sheet
+        if (sheetName == null) {
+            sheetName = "TableMaster" + writer.getWorkbook().getNumberOfSheets();
+        }
+        writer.getWorkbook().createSheet(sheetName);
+
+        // 初始化列头行
+        Sheet sheet = writer.getWorkbook().getSheet(sheetName);
+        Row sheetRow = sheet.createRow(0);
+        RowUtil.writeRow(sheetRow, header, writer.getStyleSet(), true);
     }
 
     @Override

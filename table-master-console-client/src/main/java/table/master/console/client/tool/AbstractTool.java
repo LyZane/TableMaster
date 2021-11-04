@@ -17,9 +17,12 @@ public abstract class AbstractTool {
     protected void inputParams() throws Exception {
         List<ToolParam> paramList = getParamList();
         for (ToolParam param : paramList) {
-            System.out.println(param.tips);
-            param.value = ConsoleInput.getLine();
-            System.out.println(param.value);
+
+            do {
+                System.out.println(param.tips);
+                param.value = ConsoleInput.getLine();
+            }
+            while (!param.checker.apply(paramList));
         }
 
         setParamList(paramList);

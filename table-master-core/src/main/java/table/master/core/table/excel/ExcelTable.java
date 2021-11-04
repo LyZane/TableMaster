@@ -3,7 +3,6 @@ package table.master.core.table.excel;
 import table.master.common.CloseableUtil;
 import table.master.core.table.base.AbstractTable;
 import table.master.core.table.base.AbstractTableReader;
-import table.master.core.table.base.AbstractTableWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class ExcelTable extends AbstractTable {
     }
 
     @Override
-    public AbstractTableWriter getWriter() {
+    public ExcelTableWriter getWriter() {
         return writer;
     }
 
