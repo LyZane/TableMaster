@@ -1,6 +1,7 @@
 package table.master.console.client.tool;
 
 import table.master.common.StringUtil;
+import table.master.core.ActionException;
 import table.master.core.ApplicationContext;
 import table.master.core.action.MageTableAction;
 import table.master.core.enums.TableType;
@@ -57,6 +58,13 @@ public class MageTableTool extends AbstractTool {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        if (tableList.isEmpty()) {
+            ActionException.of(
+                    "MageTableAction Error",
+                    "未找到需要合并的表格文件：" + ApplicationContext.WORK_DIR
+            );
+        }
 
         TableType tableType = TableType.Excel;
 

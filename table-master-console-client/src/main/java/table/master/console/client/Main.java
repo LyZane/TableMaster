@@ -1,5 +1,6 @@
 package table.master.console.client;
 
+import table.master.console.client.tool.AbstractTool;
 import table.master.console.client.tool.MageTableTool;
 import table.master.console.client.tool.SplitTableTool;
 
@@ -15,12 +16,23 @@ public class Main {
                         + "2. 将一个表格按列切割为多个 Sheet"
         );
         String line = ConsoleInput.getLine();
+        AbstractTool tool = null;
         switch (line) {
             case "1":
-                new MageTableTool().start();
+                tool = new MageTableTool();
+                break;
             case "2":
-                new SplitTableTool().start();
+                tool = new SplitTableTool();
+                break;
             default:
+                System.out.println("意料之外的选择，程序已退出...");
+                return;
+        }
+
+        try {
+            tool.start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         System.out.println("程序已退出...");
     }

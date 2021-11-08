@@ -22,7 +22,7 @@ public abstract class AbstractTool {
                 System.out.println(param.tips);
                 param.value = ConsoleInput.getLine();
             }
-            while (!param.checker.apply(paramList));
+            while (param.checker != null && !param.checker.apply(paramList));
         }
 
         setParamList(paramList);
