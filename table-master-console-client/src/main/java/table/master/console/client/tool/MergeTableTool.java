@@ -51,7 +51,7 @@ public class MergeTableTool extends AbstractTool {
                     switch (suffix) {
                         case "xls":
                         case "xlsx":
-                        case "cav":
+                        case "csv":
 
                             // 跳过结果文件
                             if (x.getFileName().equals("merge.")) {
@@ -86,6 +86,6 @@ public class MergeTableTool extends AbstractTool {
     protected void run() throws Exception {
         System.out.println("开始合并...");
         action.merge();
-        System.out.println("合并结束");
+        System.out.println("白嫖结束");
     }
 }

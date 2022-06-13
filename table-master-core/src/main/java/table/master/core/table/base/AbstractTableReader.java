@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author zane
@@ -26,6 +27,7 @@ public abstract class AbstractTableReader implements Closeable {
             return header;
         }
         header = doGetHeader();
+        header = header.stream().map(x -> x.trim()).collect(Collectors.toList());
         return header;
     }
 
