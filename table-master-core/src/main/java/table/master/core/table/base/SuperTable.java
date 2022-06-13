@@ -1,6 +1,11 @@
 package table.master.core.table.base;
 
+import cn.hutool.core.io.FileUtil;
 import table.master.common.CloseableUtil;
+import table.master.core.table.csv.CsvTableReader;
+import table.master.core.table.csv.CsvTableWriter;
+import table.master.core.table.excel.ExcelTableReader;
+import table.master.core.table.excel.ExcelTableWriter;
 
 import java.io.Closeable;
 import java.io.File;
@@ -29,6 +34,9 @@ public class SuperTable implements Closeable {
         if (!file.exists()) {
             throw new RuntimeException("文件尚未创建时，不能使用此方法构造。");
         }
+
+        String suffix = FileUtil.getSuffix(file).toLowerCase();
+        reader = "csv".equals(suffix) ? new CsvTableReader(file) : new ExcelTableReader(file);
         readOnly = true;
     }
 
@@ -40,6 +48,9 @@ public class SuperTable implements Closeable {
         if (file.exists()) {
             throw new Exception("文件已创建时，不能使用此方法构造。");
         }
+
+        String suffix = FileUtil.getSuffix(file).toLowerCase();
+        writer = "csv".equals(suffix) ? new CsvTableWriter(header, file) : new ExcelTableWriter(header, file);
         writeOnly = true;
     }
 
@@ -53,11 +64,16 @@ public class SuperTable implements Closeable {
     }
 
     public AbstractTableWriter getWriter() {
+        if (readOnly) {
+            throw new RuntimeException("read only mode");
+        }
         return writer;
     }
 
-
     public AbstractTableReader getReader() {
+        if (writeOnly) {
+            throw new RuntimeException("write only mode");
+        }
         return reader;
     }
 

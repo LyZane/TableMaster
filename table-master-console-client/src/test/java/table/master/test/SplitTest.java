@@ -1,7 +1,7 @@
 package table.master.test;
 
 import table.master.core.action.SplitTableAction;
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 
@@ -19,7 +19,7 @@ public class SplitTest {
             outputFile.delete();
         }
 
-        ExcelTable inputTable = new ExcelTable(inputFile);
+        SuperTable inputTable = new SuperTable(inputFile);
 
         SplitTableAction action = new SplitTableAction(inputTable, "总期数", outputFile);
         action.split();

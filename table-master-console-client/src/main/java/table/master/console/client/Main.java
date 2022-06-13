@@ -1,7 +1,7 @@
 package table.master.console.client;
 
 import table.master.console.client.tool.AbstractTool;
-import table.master.console.client.tool.MageTableTool;
+import table.master.console.client.tool.MergeTableTool;
 import table.master.console.client.tool.SplitTableTool;
 
 /**
@@ -19,7 +19,7 @@ public class Main {
         AbstractTool tool = null;
         switch (line) {
             case "1":
-                tool = new MageTableTool();
+                tool = new MergeTableTool();
                 break;
             case "2":
                 tool = new SplitTableTool();

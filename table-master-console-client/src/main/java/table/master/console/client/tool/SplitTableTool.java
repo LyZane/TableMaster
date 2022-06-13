@@ -2,7 +2,7 @@ package table.master.console.client.tool;
 
 import table.master.common.StringUtil;
 import table.master.core.action.SplitTableAction;
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +32,9 @@ public class SplitTableTool extends AbstractTool {
 
         ToolParam param2 = new ToolParam("请输入按列切割的列名：");
         param2.checker = (list) -> {
-            ExcelTable inputTable = null;
+            SuperTable inputTable = null;
             try {
-                inputTable = new ExcelTable(new File(list.get(0).value));
+                inputTable = new SuperTable(new File(list.get(0).value));
             } catch (IOException e) {
                 System.out.println("Error：表格读取失败...");
                 return false;
@@ -65,7 +65,7 @@ public class SplitTableTool extends AbstractTool {
             System.out.println("该文件已存在，将会被覆盖：" + outputFile.getAbsolutePath());
             outputFile.delete();
         }
-        ExcelTable inputTable = new ExcelTable(inputFile);
+        SuperTable inputTable = new SuperTable(inputFile);
 
         action = new SplitTableAction(inputTable, list.get(1).value, outputFile);
 

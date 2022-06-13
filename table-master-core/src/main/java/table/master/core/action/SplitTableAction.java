@@ -35,7 +35,7 @@ public class SplitTableAction {
                 key = key.replace(":", "-");
 
                 AbstractTableWriter writer = outputTable.getWriter();
-                writer.setSheetName(groupByColumn + "：" + key);
+//                writer.setSheetName(groupByColumn + "：" + key);
                 writer.writeRow(x);
             });
 

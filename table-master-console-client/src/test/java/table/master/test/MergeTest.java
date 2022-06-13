@@ -1,7 +1,7 @@
 package table.master.test;
 
 import table.master.common.StringUtil;
-import table.master.core.action.MageTableAction;
+import table.master.core.action.MergeTableAction;
 import table.master.core.table.base.SuperTable;
 
 import java.io.File;
@@ -16,9 +16,15 @@ import java.util.stream.Collectors;
  * @author zane
  * @date 2021/10/26
  */
-public class MageTest {
+public class MergeTest {
     public static void main(String[] args) throws Exception {
-        String baseDir = "/Users/zane/data/TableMaster/success";
+        String baseDir = "/Users/zane/Code/TableMaster/table-master-console-client/src/test/resources/merge/case2";
+
+
+        File outputFile = Paths.get(baseDir, "merge.xlsx").toFile();
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
 
         List<SuperTable> tableList = Files
                 .list(Paths.get(baseDir))
@@ -28,6 +34,12 @@ public class MageTest {
                         case "xls":
                         case "xlsx":
                         case "csv":
+
+                            // 跳过结果文件
+                            if (x.getFileName().equals("merge.")) {
+                                return null;
+                            }
+
                             try {
                                 return new SuperTable(x.toFile());
                             } catch (IOException e) {
@@ -40,13 +52,8 @@ public class MageTest {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-
-        File outputFile = Paths.get(baseDir, "mage.xlsx").toFile();
-        if (outputFile.exists()) {
-            outputFile.delete();
-        }
-        MageTableAction action = new MageTableAction(tableList, outputFile);
-        action.mage();
+        MergeTableAction action = new MergeTableAction(tableList, outputFile);
+        action.merge();
 
     }
 }

@@ -3,7 +3,7 @@ package table.master.console.client.tool;
 import table.master.common.StringUtil;
 import table.master.core.ActionException;
 import table.master.core.ApplicationContext;
-import table.master.core.action.MageTableAction;
+import table.master.core.action.MergeTableAction;
 import table.master.core.table.base.SuperTable;
 
 import java.io.File;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
  * @author zane
  * @date 2021/10/25
  */
-public class MageTableTool extends AbstractTool {
-    private MageTableAction action;
+public class MergeTableTool extends AbstractTool {
+    private MergeTableAction action;
 
     @Override
     protected List<ToolParam> getParamList() {
@@ -38,6 +38,12 @@ public class MageTableTool extends AbstractTool {
         ApplicationContext.WORK_DIR = list.get(0).value;
         String outputTableSuffix = "1".equals(list.get(1).value) ? "xlsx" : "csv";
 
+        File outputFile = new File(ApplicationContext.getAbsolutePath("merge." + outputTableSuffix));
+        if (outputFile.exists()) {
+            System.out.println("该文件已存在，将会被覆盖：" + outputFile.getAbsolutePath());
+            outputFile.delete();
+        }
+
         List<SuperTable> tableList = Files
                 .list(ApplicationContext.getWorkDirPath())
                 .map(x -> {
@@ -46,6 +52,12 @@ public class MageTableTool extends AbstractTool {
                         case "xls":
                         case "xlsx":
                         case "cav":
+
+                            // 跳过结果文件
+                            if (x.getFileName().equals("merge.")) {
+                                return null;
+                            }
+
                             try {
                                 System.out.println("发现表格：" + x);
                                 return new SuperTable(x.toFile());
@@ -66,19 +78,14 @@ public class MageTableTool extends AbstractTool {
             );
         }
 
-        File outputFile = new File(ApplicationContext.getAbsolutePath("mage." + outputTableSuffix));
-        if (outputFile.exists()) {
-            System.out.println("该文件已存在，将会被覆盖：" + outputFile.getAbsolutePath());
-            outputFile.delete();
-        }
-        action = new MageTableAction(tableList, outputFile);
+        action = new MergeTableAction(tableList, outputFile);
     }
 
 
     @Override
     protected void run() throws Exception {
         System.out.println("开始合并...");
-        action.mage();
+        action.merge();
         System.out.println("合并结束");
     }
 }

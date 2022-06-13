@@ -1,6 +1,7 @@
 package table.master.core.table.base;
 
 import java.io.Closeable;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,19 +11,23 @@ import java.util.List;
  */
 public abstract class AbstractTableWriter implements Closeable {
     protected List<String> header;
-    protected String sheetName = "sheet01";
+    protected File file;
+    private long writtenRowCount;
 
-    protected AbstractTableWriter(List<String> header) {
+
+    protected AbstractTableWriter(List<String> header, File file) {
         this.header = header;
+        this.file = file;
     }
 
     protected abstract void doWriteRow(LinkedHashMap<String, Object> row);
 
-    public void setSheetName(String sheetName) {
-        this.sheetName = sheetName;
-    }
-
     public void writeRow(LinkedHashMap<String, Object> row) {
         doWriteRow(row);
+        writtenRowCount++;
+    }
+
+    public long getWrittenRowCount() {
+        return writtenRowCount;
     }
 }

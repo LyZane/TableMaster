@@ -22,7 +22,7 @@ public class ExcelTableWriter extends AbstractTableWriter {
     private BigExcelWriter writer;
 
     public ExcelTableWriter(List<String> header, File file) {
-        super(header);
+        super(header, file);
         writer = ExcelUtil.getBigWriter(file);
         initExcel();
     }
@@ -47,15 +47,15 @@ public class ExcelTableWriter extends AbstractTableWriter {
     }
 
 
-    public void writeRowToSheet(LinkedHashMap<String, Object> row) {
-
-        if (writer.getWorkbook().getSheet(sheetName) == null) {
-            addSheet(sheetName, row.keySet());
-        }
-        Sheet sheet = writer.getWorkbook().getSheet(sheetName);
-        Row sheetRow = sheet.createRow(sheet.getPhysicalNumberOfRows());
-        RowUtil.writeRow(sheetRow, row.values(), writer.getStyleSet(), false);
-    }
+    // public void writeRowToSheet(LinkedHashMap<String, Object> row) {
+    //
+    //     if (writer.getWorkbook().getSheet(sheetName) == null) {
+    //         addSheet(sheetName, row.keySet());
+    //     }
+    //     Sheet sheet = writer.getWorkbook().getSheet(sheetName);
+    //     Row sheetRow = sheet.createRow(sheet.getPhysicalNumberOfRows());
+    //     RowUtil.writeRow(sheetRow, row.values(), writer.getStyleSet(), false);
+    // }
 
     public void addSheet(String sheetName, Collection<String> header) {
         // 创建 sheet

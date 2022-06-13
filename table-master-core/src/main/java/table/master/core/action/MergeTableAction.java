@@ -11,11 +11,11 @@ import java.util.List;
  * @author zane
  * @date 2021/10/25
  */
-public class MageTableAction {
+public class MergeTableAction {
     private List<SuperTable> tableList;
     private SuperTable outputTable;
 
-    public MageTableAction(List<SuperTable> tableList, File outputFile) throws Exception {
+    public MergeTableAction(List<SuperTable> tableList, File outputFile) throws Exception {
         if (outputFile.exists()) {
             throw new Exception("合成后的文件已存在，请删除后重试：" + outputFile.getAbsolutePath());
         }
@@ -44,7 +44,7 @@ public class MageTableAction {
         }
     }
 
-    public SuperTable mage() throws Exception {
+    public SuperTable merge() throws Exception {
         beforeMage();
 
         try {
@@ -58,6 +58,10 @@ public class MageTableAction {
             outputTable.close();
         }
 
+        System.out.println();
+        System.out.println("-------------------- ଘ(੭ˊᵕˋ)੭ 合并成功 --------------------");
+        System.out.println("输出文件：" + outputTable.getFileName());
+        System.out.println("共计：" + outputTable.getWriter().getWrittenRowCount() + "行");
         return outputTable;
     }
 

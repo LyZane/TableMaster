@@ -3,6 +3,7 @@ package table.master.core.table.base;
 import java.io.Closeable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -34,7 +35,13 @@ public abstract class AbstractTableReader implements Closeable {
         }
 
         try {
-            return doReadNextRow();
+            LinkedHashMap<String, Object> row = doReadNextRow();
+            // 跳过空行
+            if (row != null && row.values().stream().noneMatch(Objects::nonNull)) {
+                return null;
+            }
+
+            return row;
         } finally {
             readDataRows++;
         }
