@@ -2,9 +2,7 @@ package table.master.core.action;
 
 import table.master.common.StringUtil;
 import table.master.core.ActionException;
-import table.master.core.enums.TableType;
-import table.master.core.table.base.AbstractTable;
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 import java.util.List;
@@ -14,17 +12,16 @@ import java.util.List;
  * @date 2021/10/25
  */
 public class MageTableAction {
-    private TableType tableType;
-    private List<AbstractTable> tableList;
-    private File outputFile;
+    private List<SuperTable> tableList;
+    private SuperTable outputTable;
 
-    public MageTableAction(TableType tableType, List<AbstractTable> tableList, File outputFile) throws Exception {
-        this.tableType = tableType;
-        this.tableList = tableList;
-        this.outputFile = outputFile;
+    public MageTableAction(List<SuperTable> tableList, File outputFile) throws Exception {
         if (outputFile.exists()) {
             throw new Exception("合成后的文件已存在，请删除后重试：" + outputFile.getAbsolutePath());
         }
+
+        this.tableList = tableList;
+        this.outputTable = new SuperTable(tableList.get(0).getReader().getHeader(), outputFile);
     }
 
     private void beforeMage() throws ActionException {
@@ -37,7 +34,7 @@ public class MageTableAction {
 
         if (distinctCount > 1) {
             String message = "tables header 不一致" + System.lineSeparator();
-            for (AbstractTable table : tableList) {
+            for (SuperTable table : tableList) {
                 message += "【" + table.getFileName() + "】";
                 message += "(" + table.getReader().getHeader().size() + "列)";
                 message += StringUtil.join(table.getReader().getHeader(), ",");
@@ -47,30 +44,21 @@ public class MageTableAction {
         }
     }
 
-    public AbstractTable mage() throws Exception {
+    public SuperTable mage() throws Exception {
         beforeMage();
-        AbstractTable table = createTable();
+
         try {
-            for (AbstractTable subTable : tableList) {
+            for (SuperTable subTable : tableList) {
                 subTable.getReader().readAll(x -> {
-                    table.getWriter().writeRow(x);
+                    outputTable.getWriter().writeRow(x);
                 });
                 System.out.println("已合并：" + subTable.getFileName());
             }
         } finally {
-            table.close();
+            outputTable.close();
         }
 
-        return table;
+        return outputTable;
     }
 
-    private AbstractTable createTable() throws Exception {
-        List<String> header = tableList.get(0).getReader().getHeader();
-        switch (tableType) {
-            case Excel:
-                return new ExcelTable(header, outputFile);
-            default:
-                throw new Exception("尚不支持 excel 以外的格式");
-        }
-    }
 }

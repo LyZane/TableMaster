@@ -47,7 +47,7 @@ public class ExcelTableWriter extends AbstractTableWriter {
     }
 
 
-    public void writeRowToSheet(LinkedHashMap<String, Object> row, String sheetName) {
+    public void writeRowToSheet(LinkedHashMap<String, Object> row) {
 
         if (writer.getWorkbook().getSheet(sheetName) == null) {
             addSheet(sheetName, row.keySet());

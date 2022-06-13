@@ -2,9 +2,7 @@ package table.master.test;
 
 import table.master.common.StringUtil;
 import table.master.core.action.MageTableAction;
-import table.master.core.enums.TableType;
-import table.master.core.table.base.AbstractTable;
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,15 +20,16 @@ public class MageTest {
     public static void main(String[] args) throws Exception {
         String baseDir = "/Users/zane/data/TableMaster/success";
 
-        List<AbstractTable> tableList = Files
+        List<SuperTable> tableList = Files
                 .list(Paths.get(baseDir))
                 .map(x -> {
                     String suffix = StringUtil.substringAfterLast(x.toString(), ".").toLowerCase();
                     switch (suffix) {
                         case "xls":
                         case "xlsx":
+                        case "csv":
                             try {
-                                return new ExcelTable(x.toFile());
+                                return new SuperTable(x.toFile());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -46,7 +45,7 @@ public class MageTest {
         if (outputFile.exists()) {
             outputFile.delete();
         }
-        MageTableAction action = new MageTableAction(TableType.Excel, tableList, outputFile);
+        MageTableAction action = new MageTableAction(tableList, outputFile);
         action.mage();
 
     }

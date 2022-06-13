@@ -4,9 +4,7 @@ import table.master.common.StringUtil;
 import table.master.core.ActionException;
 import table.master.core.ApplicationContext;
 import table.master.core.action.MageTableAction;
-import table.master.core.enums.TableType;
-import table.master.core.table.base.AbstractTable;
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,17 +36,19 @@ public class MageTableTool extends AbstractTool {
     @Override
     protected void setParamList(List<ToolParam> list) throws Exception {
         ApplicationContext.WORK_DIR = list.get(0).value;
+        String outputTableSuffix = "1".equals(list.get(1).value) ? "xlsx" : "csv";
 
-        List<AbstractTable> tableList = Files
+        List<SuperTable> tableList = Files
                 .list(ApplicationContext.getWorkDirPath())
                 .map(x -> {
                     String suffix = StringUtil.substringAfterLast(x.toString(), ".").toLowerCase();
                     switch (suffix) {
                         case "xls":
                         case "xlsx":
+                        case "cav":
                             try {
                                 System.out.println("发现表格：" + x);
-                                return new ExcelTable(x.toFile());
+                                return new SuperTable(x.toFile());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -62,18 +62,16 @@ public class MageTableTool extends AbstractTool {
         if (tableList.isEmpty()) {
             ActionException.of(
                     "MageTableAction Error",
-                    "未找到需要合并的表格文件：" + ApplicationContext.WORK_DIR
+                    "在此目录未找到表格文件（excel/csv）：" + ApplicationContext.WORK_DIR
             );
         }
 
-        TableType tableType = TableType.Excel;
-
-        File outputFile = new File(ApplicationContext.getAbsolutePath("mage.xlsx"));
+        File outputFile = new File(ApplicationContext.getAbsolutePath("mage." + outputTableSuffix));
         if (outputFile.exists()) {
             System.out.println("该文件已存在，将会被覆盖：" + outputFile.getAbsolutePath());
             outputFile.delete();
         }
-        action = new MageTableAction(tableType, tableList, outputFile);
+        action = new MageTableAction(tableList, outputFile);
     }
 
 

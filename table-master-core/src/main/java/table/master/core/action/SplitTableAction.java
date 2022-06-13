@@ -1,6 +1,7 @@
 package table.master.core.action;
 
-import table.master.core.table.excel.ExcelTable;
+import table.master.core.table.base.AbstractTableWriter;
+import table.master.core.table.base.SuperTable;
 
 import java.io.File;
 
@@ -9,11 +10,11 @@ import java.io.File;
  * @date 2021/11/03
  */
 public class SplitTableAction {
-    private ExcelTable inputTable;
+    private SuperTable inputTable;
     private String groupByColumn;
     private File outputFile;
 
-    public SplitTableAction(ExcelTable inputTable, String groupByColumn, File outputFile) throws Exception {
+    public SplitTableAction(SuperTable inputTable, String groupByColumn, File outputFile) throws Exception {
         this.inputTable = inputTable;
         this.outputFile = outputFile;
         this.groupByColumn = groupByColumn;
@@ -22,9 +23,9 @@ public class SplitTableAction {
         }
     }
 
-    public ExcelTable split() throws Exception {
+    public SuperTable split() throws Exception {
 
-        ExcelTable outputTable = new ExcelTable(inputTable.getReader().getHeader(), outputFile);
+        SuperTable outputTable = new SuperTable(inputTable.getReader().getHeader(), outputFile);
 
         try {
             inputTable.getReader().readAll(x -> {
@@ -32,7 +33,10 @@ public class SplitTableAction {
 
                 String key = String.valueOf(x.get(groupByColumn));
                 key = key.replace(":", "-");
-                outputTable.getWriter().writeRowToSheet(x, groupByColumn + "：" + key);
+
+                AbstractTableWriter writer = outputTable.getWriter();
+                writer.setSheetName(groupByColumn + "：" + key);
+                writer.writeRow(x);
             });
 
             System.out.println("切割完毕：" + outputTable.getFileName());
