@@ -74,8 +74,8 @@ public class SplitTableTool extends AbstractTool {
 
     @Override
     protected void run() throws Exception {
-        System.out.println("开始合并...");
+        System.out.println("开始切割...");
         action.split();
-        System.out.println("合并结束");
+        System.out.println("切割结束");
     }
 }

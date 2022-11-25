@@ -41,7 +41,6 @@
     <modules>
         <module>table-master-common</module>
         <module>table-master-core</module>
-        <module>table-master-service</module>
         <module>table-master-console-client</module>
     </modules>
 
